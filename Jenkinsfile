@@ -1,4 +1,8 @@
 pipeline {
+  environment {
+    registry = 'dekabitasp/mystok-jenkins-test'
+    registryCredential = 'dockerhub'
+  }
   agent none
   stages {
     stage('Build war') {
@@ -15,8 +19,20 @@ pipeline {
     stage('Build Container Image') {
       agent any
       steps {
-        sh "docker build -t dekabitasp/mystok-app-recipeservlet-with-reverse-proxy-with-mvn-with-jenkins-with-jenkins:${env.JENKINS_NODE_COOKIE} . --no-cache"
-        sh "docker tag dekabitasp/mystok-app-recipeservlet-with-reverse-proxy-with-mvn-with-jenkins-with-jenkins:${env.JENKINS_NODE_COOKIE} dekabitasp/mystok-app-recipeservlet-with-reverse-proxy-with-mvn-with-jenkins-with-jenkins:latest"
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+    stage('Deploy Image') {
+      agent any
+      steps {
+        script {
+          docker.withRegistry('',registryCredential) {
+            dockerImage.push()
+            dockerImage.push('latest')
+          }
+        }
       }
     }
   }
