@@ -15,8 +15,8 @@ pipeline {
     stage('Build Container Image') {
       agent any
       steps {
-        sh 'docker build -t dekabitasp/mystok-app-recipeservlet-with-reverse-proxy-with-mvn-with-jenkins-with-jenkins:${env.BUILD_ID} . --no-cache'
-        sh 'docker tag dekabitasp/mystok-app-recipeservlet-with-reverse-proxy-with-mvn-with-jenkins-with-jenkins:${env.BUILD_ID} dekabitasp/mystok-app-recipeservlet-with-reverse-proxy-with-mvn-with-jenkins-with-jenkins:latest'
+        sh "docker build -t dekabitasp/mystok-app-recipeservlet-with-reverse-proxy-with-mvn-with-jenkins-with-jenkins:${env.JENKINS_NODE_COOKIE} . --no-cache"
+        sh "docker tag dekabitasp/mystok-app-recipeservlet-with-reverse-proxy-with-mvn-with-jenkins-with-jenkins:${env.JENKINS_NODE_COOKIE} dekabitasp/mystok-app-recipeservlet-with-reverse-proxy-with-mvn-with-jenkins-with-jenkins:latest"
       }
     }
   }
